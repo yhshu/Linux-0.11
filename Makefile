@@ -134,25 +134,15 @@ tags:
 cscope:
 	@cscope -Rbkq
 
-start:
+run: Image
 	@qemu-system-x86_64 -m 16M -boot a -fda Image -hda $(HDA_IMG)
 
-debug:
-	@echo $(OS)
-	@qemu-system-x86_64 -m 16M -boot a -fda Image -hda $(HDA_IMG) -s -S
+#debug:
+#	@echo $(OS)
+#	@qemu-system-x86_64 -m 16M -boot a -fda Image -hda $(HDA_IMG) -s -S
 
-bochs-debug:
-	@$(BOCHS) -q -f tools/bochs/bochsrc/bochsrc-hd-dbg.bxrc	
-
-bochs:
-ifeq ($(BOCHS),)
-	@(cd tools/bochs/bochs-2.3.7; \
-	./configure --enable-plugins --enable-disasm --enable-gdb-stub;\
-	make)
-endif
-
-bochs-clean:
-	@make clean -C tools/bochs/bochs-2.3.7
+bochs: Image
+	bochs -q -f bochsrc
 
 calltree:
 ifeq ($(CALLTREE),)
@@ -173,8 +163,8 @@ help:
 	@echo ""
 	@echo "Usage:"
 	@echo "     make --generate a kernel floppy Image with a fs on hda1"
-	@echo "     make start -- start the kernel in qemu"
-	@echo "     make debug -- debug the kernel in qemu & gdb at port 1234"
+	@echo "     make run -- start the kernel in qemu"
+	@echo "     make bochs -- start the kernel in bochs"
 	@echo "     make disk  -- generate a kernel Image & copy it to floppy"
 	@echo "     make cscope -- genereate the cscope index databases"
 	@echo "     make tags -- generate the tag file"
